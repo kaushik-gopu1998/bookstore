@@ -1,4 +1,4 @@
-package com.app.bookselling.bookstore;
+package com.app.bookstore;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
