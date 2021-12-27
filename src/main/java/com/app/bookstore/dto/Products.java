@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 @Entity
 public class Products implements Serializable {
 
@@ -35,8 +34,8 @@ public class Products implements Serializable {
 	
 	private Integer unitsOnOrder;
 	
-	@OneToOne
-	private OrderLines orderLine;
+	@OneToMany
+	private Set<OrderLines> orderLine;
 	
 	@OneToMany
 	private Set<Reviews> review;
@@ -47,7 +46,7 @@ public class Products implements Serializable {
 	
 	
 	public Products(Integer productId, String name, String description, float price, boolean status, Users supplierId,
-			Category category, Integer unitsInStock, Integer unitsOnOrder, OrderLines orderLine,
+			Category category, Integer unitsInStock, Integer unitsOnOrder, Set<OrderLines> orderLine,
 			Set<Reviews> review) {
 		super();
 		this.productId = productId;
@@ -137,18 +136,14 @@ public class Products implements Serializable {
 	}
 	
 	
-
-	public OrderLines getOrderLine() {
+	public Set<OrderLines> getOrderLine() {
 		return orderLine;
 	}
 
 
-
 	public void setOrderLine(OrderLines orderLine) {
-		this.orderLine = orderLine;
+		this.orderLine.add(orderLine);
 	}
-	
-	
 
 
 	public Set<Reviews> getComment() {
