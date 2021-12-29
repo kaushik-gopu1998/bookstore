@@ -2,12 +2,10 @@ package com.app.bookstore.dto;
 
 import java.io.Serializable;
 import java.sql.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 @Entity
 public class OrderLines  implements Serializable{
 
@@ -16,7 +14,7 @@ public class OrderLines  implements Serializable{
 	@Id
 	private Integer lineId;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name ="product_id")
 	private Products prodcut;
 	

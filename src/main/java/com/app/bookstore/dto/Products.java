@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -12,6 +13,7 @@ public class Products implements Serializable {
 
 	private static final long serialVersionUID = -7440090907392499673L;
 
+	@Id
 	private Integer productId;
 	
 	private String name;
@@ -146,12 +148,12 @@ public class Products implements Serializable {
 	}
 
 
-	public Set<Reviews> getComment() {
+	public Set<Reviews> getReview() {
 		return review;
 	}
 
 
-	public void setComment(Reviews review) {
+	public void setReview(Reviews review) {
 		this.review.add(review);
 	}
 
