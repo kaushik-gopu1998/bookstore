@@ -26,6 +26,8 @@ public class Users implements Serializable {
 	
 	private String password;
 	
+	private String phoneNumber;
+	
 	int zip;
 	
 	@ManyToOne
@@ -47,7 +49,7 @@ public class Users implements Serializable {
 
 	
 
-	public Users(Integer userId, String firstName, String lastName, String email, String password, int zip, City city,
+	public Users(Integer userId, String firstName, String lastName, String phoneNumber, String email, String password, int zip, City city,
 			Set<Products> product, Set<Orders> order, Set<Reviews> review) {
 		super();
 		this.userId = userId;
@@ -60,6 +62,7 @@ public class Users implements Serializable {
 		this.product = product;
 		this.order = order;
 		this.review = review;
+		this.phoneNumber=phoneNumber;
 	}
 
 
@@ -181,15 +184,33 @@ public class Users implements Serializable {
 	public void setReview(Reviews review) {
 		this.review.add(review);
 	}
+	
+	
+
+
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 
 
 
 	@Override
 	public String toString() {
 		return "Users [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-				+ ", password=" + password + ", zip=" + zip + ", city=" + city + ", product=" + product + ", order="
-				+ order + ", review=" + review + "]";
+				+ ", password=" + password + ", phoneNumber=" + phoneNumber + ", zip=" + zip + ", city=" + city
+				+ ", product=" + product + ", order=" + order + ", review=" + review + "]";
 	}
+
+
+
+	
 	
 	
 	

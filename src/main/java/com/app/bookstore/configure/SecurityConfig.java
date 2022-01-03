@@ -1,4 +1,4 @@
-package com.app.bookstore;
+package com.app.bookstore.configure;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

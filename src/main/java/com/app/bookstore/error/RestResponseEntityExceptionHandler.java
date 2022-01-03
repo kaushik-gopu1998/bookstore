@@ -15,7 +15,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.app.bookstore.exceptions.ApiError;
 import com.app.bookstore.exceptions.EmailIdExistsException;
+import com.app.bookstore.exceptions.InvalidInputException;
 import com.app.bookstore.exceptions.ResponseEntityBuilder;
+import com.app.bookstore.exceptions.UserIdNotFoundException;
 
 
 @ControllerAdvice
@@ -49,5 +51,32 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 				);
 		return ResponseEntityBuilder.build(apiError);
 		
-	}	
+	}
+	@ExceptionHandler({UserIdNotFoundException.class})
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ResponseEntity<Object> handleConstraintViolation(UserIdNotFoundException ex , final WebRequest request){
+		List<String> details =  new ArrayList<String>();
+		details.add(ex.getMessage());
+		ApiError apiError = new ApiError(
+				 LocalDateTime.now(),
+				 HttpStatus.NOT_FOUND,
+				 "User Id Not Found!",
+				 details
+				);
+		return ResponseEntityBuilder.build(apiError);		
+}
+	
+	@ExceptionHandler({InvalidInputException.class})
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<Object> handleInvalidInputException(InvalidInputException ex, final WebRequest request){
+		List<String> details =  new ArrayList<String>();
+		details.add(ex.getMessage());
+		ApiError apiError = new ApiError(
+				 LocalDateTime.now(),
+				 HttpStatus.BAD_REQUEST,
+				 "Inavlid Input!",
+				 details
+				);
+		return ResponseEntityBuilder.build(apiError);
+	}
 }
