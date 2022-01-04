@@ -27,10 +27,8 @@ public class UserMaintenanceController {
 	@Autowired
 	UserDetailsValidator userDetailsValidator;
 	@PostMapping("/createUser")
-	
-	
-	public ResponseEntity<String> createUser(@RequestBody  Users user, BindingResult result) throws EmailIdExistsException, InvalidInputException{
 		
+	public ResponseEntity<String> createUser(@RequestBody  Users user, BindingResult result) throws EmailIdExistsException, InvalidInputException{
 		performUserDataValidation(user, result);		
 		if(usersRepo.findByEmail(user.getEmail())!=null) {
 			throw new EmailIdExistsException("Invalid Entry");
@@ -41,7 +39,6 @@ public class UserMaintenanceController {
 		return new ResponseEntity<>("successfully created!!",HttpStatus.OK);
 	}
 	
-
 	@PutMapping("/updateUser/{id}")
 	public ResponseEntity<String> updateUser(@PathVariable("id") Integer id, @RequestBody Users newData, BindingResult result) throws UserIdNotFoundException, InvalidInputException{
 		performUserDataValidation(newData, result);
@@ -53,6 +50,7 @@ public class UserMaintenanceController {
 		 oldData.setEmail(newData.getEmail());
 		 oldData.setPassword(newData.getPassword());
 		 oldData.setCity(newData.getCity());
+		 oldData.setPhoneNumber(newData.getPhoneNumber());
 		 usersRepo.save(oldData);
 		 return new ResponseEntity<>("successfully updated!!",HttpStatus.OK);
 		 }
@@ -62,7 +60,6 @@ public class UserMaintenanceController {
 		 }		
 	}
 	
-
 	private void performUserDataValidation(Users user, BindingResult result) throws InvalidInputException {
 		userDetailsValidator.validate(user, result);
 		if(result.hasErrors())
@@ -72,15 +69,6 @@ public class UserMaintenanceController {
 		    	errors.add(((FieldError) error).getField());
 		    }
 			throw new InvalidInputException(errors);
-		}
-		
-		
-		
-		
-		
-		
-		
-	}
-	
-	
+		}						
+	}	
 }
