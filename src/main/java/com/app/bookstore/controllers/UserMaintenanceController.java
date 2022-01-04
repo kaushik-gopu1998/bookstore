@@ -2,6 +2,8 @@ package com.app.bookstore.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import com.app.bookstore.validators.UserDetailsValidator;
 @RestController
 public class UserMaintenanceController {
 
+	private static final Logger logger = LoggerFactory.getLogger(UserMaintenanceController.class);
 	@Autowired
 	UsersRepo usersRepo;
 	@Autowired
@@ -29,13 +32,16 @@ public class UserMaintenanceController {
 	@PostMapping("/createUser")
 		
 	public ResponseEntity<String> createUser(@RequestBody  Users user, BindingResult result) throws EmailIdExistsException, InvalidInputException{
+		
 		performUserDataValidation(user, result);		
 		if(usersRepo.findByEmail(user.getEmail())!=null) {
+			logger.error("EmailId already exists!->{}",user.getEmail());
 			throw new EmailIdExistsException("Invalid Entry");
 		}		
 		Integer newUserId = usersRepo.getMaxUserId();
 		user.setUserId(newUserId+1);
 		usersRepo.save(user);
+		logger.info("user registration successfull");
 		return new ResponseEntity<>("successfully created!!",HttpStatus.OK);
 	}
 	
@@ -52,18 +58,22 @@ public class UserMaintenanceController {
 		 oldData.setCity(newData.getCity());
 		 oldData.setPhoneNumber(newData.getPhoneNumber());
 		 usersRepo.save(oldData);
+		 logger.info("update successfull!");
 		 return new ResponseEntity<>("successfully updated!!",HttpStatus.OK);
 		 }
 		 else 
-		 {		 
+		 {		
+		 logger.error("User Id not found in database");
 		 throw new UserIdNotFoundException("user id not found!");
 		 }		
 	}
 	
 	private void performUserDataValidation(Users user, BindingResult result) throws InvalidInputException {
+		logger.info("Validation Process Started...");
 		userDetailsValidator.validate(user, result);
 		if(result.hasErrors())
 		{
+			logger.error("invalid entry by user");
 			List<String> errors = new ArrayList<>();
 		    for(ObjectError error : result.getAllErrors()) {
 		    	errors.add(((FieldError) error).getField());
