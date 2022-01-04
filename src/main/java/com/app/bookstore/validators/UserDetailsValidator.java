@@ -74,8 +74,7 @@ public class UserDetailsValidator implements Validator {
         String emailRegex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
         Pattern pattern = Pattern.compile(emailRegex);
         Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-        
+        return matcher.matches();   
 	}
 
 	private boolean checkInputString(String input) {
