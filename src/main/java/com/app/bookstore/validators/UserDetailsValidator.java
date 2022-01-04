@@ -21,11 +21,11 @@ public class UserDetailsValidator implements Validator {
 	public void validate(Object userObj, Errors errors) {
 		Users user = (Users) userObj;
 		if (checkInputString(user.getFirstName())) {
-            errors.rejectValue("firstname", "firstname.invalid");
+            errors.rejectValue("firstName", "firstname.invalid");
         }
 		
 		if(checkInputString(user.getLastName())) {
-			 errors.rejectValue("lastname", "lastnamename.ivalid");
+			 errors.rejectValue("lastName", "lastnamename.ivalid");
 		}
 		
 		if(checkInputString(user.getPassword()) || !checkPasswordStrngth(user.getPassword())) {

@@ -26,7 +26,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	@ExceptionHandler({EmailIdExistsException.class})
 	public ResponseEntity<Object> handleForbiddenRequest(EmailIdExistsException ex , final WebRequest request){
 
-		List<String> details =  new ArrayList<String>();
+		List<Object> details =  new ArrayList<Object>();
 		details.add(ex.getMessage());
 		ApiError apiError = new ApiError(
 				 LocalDateTime.now(),
@@ -41,7 +41,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	@ExceptionHandler({ConstraintViolationException.class})
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex , final WebRequest request){
-		List<String> details =  new ArrayList<String>();
+		List<Object> details =  new ArrayList<Object>();
 		details.add(ex.getMessage());
 		ApiError apiError = new ApiError(
 				 LocalDateTime.now(),
@@ -55,7 +55,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	@ExceptionHandler({UserIdNotFoundException.class})
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ResponseEntity<Object> handleConstraintViolation(UserIdNotFoundException ex , final WebRequest request){
-		List<String> details =  new ArrayList<String>();
+		List<Object> details =  new ArrayList<Object>();
 		details.add(ex.getMessage());
 		ApiError apiError = new ApiError(
 				 LocalDateTime.now(),
@@ -69,13 +69,13 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	@ExceptionHandler({InvalidInputException.class})
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity<Object> handleInvalidInputException(InvalidInputException ex, final WebRequest request){
-		List<String> details =  new ArrayList<String>();
-		details.add(ex.getMessage());
+		List<Object> details =  new ArrayList<Object>();
+		details.add(ex.getList());
 		ApiError apiError = new ApiError(
 				 LocalDateTime.now(),
 				 HttpStatus.BAD_REQUEST,
 				 "Inavlid Input!",
-				 details
+			      details
 				);
 		return ResponseEntityBuilder.build(apiError);
 	}

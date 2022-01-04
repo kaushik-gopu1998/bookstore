@@ -12,12 +12,12 @@ public class ApiError {
 	private LocalDateTime timestamp;
     private HttpStatus status;
     private String message;
-    private List<String> errors;
+    private List<Object> errors;
 	public ApiError() {
 		super();
 	}
 	
-	public ApiError(LocalDateTime timestamp, HttpStatus status, String message, List<String> errors) {
+	public ApiError(LocalDateTime timestamp, HttpStatus status, String message, List<Object> errors) {
 		super();
 		this.timestamp = timestamp;
 		this.status = status;
@@ -43,10 +43,10 @@ public class ApiError {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	public List<String> getErrors() {
+	public List<Object> getErrors() {
 		return errors;
 	}
-	public void setErrors(List<String> errors) {
+	public void setErrors(List<Object> errors) {
 		this.errors = errors;
 	}
     
