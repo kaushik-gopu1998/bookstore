@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Entity
 public class Users implements Serializable {
@@ -18,14 +20,22 @@ public class Users implements Serializable {
 	@Id  
 	private Integer userId;
 	
+	@NotNull(message="null not allowed")
 	private String firstName;
-	
+
+	@NotNull(message="null not allowed")
 	private String lastName;
 	
+	@Pattern(regexp="^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$",message="invalid email")
+	@NotNull
 	private String email;
 	
+	@Pattern(regexp="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$",message="invalid password")
+	@NotNull
 	private String password;
 	
+	@Pattern(regexp="^\\d{10}$",message="invalid phone number")
+	@NotNull
 	private String phoneNumber;
 	
 	int zip;

@@ -2,6 +2,8 @@ package com.app.bookstore.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,8 +32,8 @@ public class UserMaintenanceController {
 	UsersRepo usersRepo;
 	@Autowired
 	UserDetailsValidator userDetailsValidator;
+
 	@PostMapping("/createUser")
-		
 	public ResponseEntity<String> createUser(@RequestBody  Users user, BindingResult result) throws EmailIdExistsException, InvalidInputException{
 		
 		performUserDataValidation(user, result);		
@@ -38,6 +41,24 @@ public class UserMaintenanceController {
 			logger.error("EmailId already exists!->{}",user.getEmail());
 			throw new EmailIdExistsException("Invalid Entry");
 		}		
+		Integer newUserId = usersRepo.getMaxUserId();
+		user.setUserId(newUserId+1);
+		usersRepo.save(user);
+		logger.info("user registration successfull");
+		return new ResponseEntity<>("successfully created!!",HttpStatus.OK);
+	}
+	
+	@PostMapping("/createUserValidation")
+	public ResponseEntity<String> createUserValidation(@RequestBody @Valid @ModelAttribute("Users") Users user, BindingResult result) throws EmailIdExistsException, InvalidInputException{
+		
+		if(result.hasErrors()) {
+			logger.info(result.getFieldErrors().toString());
+			List<String> errors = new ArrayList<>();
+		    for(ObjectError error : result.getAllErrors()) {
+		    	errors.add(((FieldError) error).getField());
+		    }
+			throw new InvalidInputException(errors);
+		}
 		Integer newUserId = usersRepo.getMaxUserId();
 		user.setUserId(newUserId+1);
 		usersRepo.save(user);
