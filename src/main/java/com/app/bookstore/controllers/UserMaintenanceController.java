@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -15,10 +16,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+
+import com.app.bookstore.dto.UserAddress;
 import com.app.bookstore.dto.Users;
 import com.app.bookstore.exceptions.EmailIdExistsException;
 import com.app.bookstore.exceptions.InvalidInputException;
 import com.app.bookstore.exceptions.UserIdNotFoundException;
+import com.app.bookstore.repo.UsersAddressRepo;
 import com.app.bookstore.repo.UsersRepo;
 import com.app.bookstore.validators.UserDetailsValidator;
 @RestController
@@ -29,10 +34,10 @@ public class UserMaintenanceController {
 	UsersRepo usersRepo;
 	@Autowired
 	UserDetailsValidator userDetailsValidator;
-	@PostMapping("/createUser")
-		
-	public ResponseEntity<String> createUser(@RequestBody  Users user, BindingResult result) throws EmailIdExistsException, InvalidInputException{
-		
+	@Autowired
+	UsersAddressRepo usersAddressRepo;
+	@PostMapping("/createUser")		
+	public ResponseEntity<String> createUser(@RequestBody  Users user, BindingResult result) throws EmailIdExistsException, InvalidInputException{	
 		performUserDataValidation(user, result);		
 		if(usersRepo.findByEmail(user.getEmail())!=null) {
 			logger.error("EmailId already exists!->{}",user.getEmail());
@@ -55,7 +60,6 @@ public class UserMaintenanceController {
 		 oldData.setLastName(newData.getLastName());
 		 oldData.setEmail(newData.getEmail());
 		 oldData.setPassword(newData.getPassword());
-		 oldData.setCity(newData.getCity());
 		 oldData.setPhoneNumber(newData.getPhoneNumber());
 		 usersRepo.save(oldData);
 		 logger.info("update successfull!");
@@ -63,9 +67,18 @@ public class UserMaintenanceController {
 		 }
 		 else 
 		 {		
-		 logger.error("User Id not found in database");
+		 logger.debug("User Id {} not found in database",id);
 		 throw new UserIdNotFoundException("user id not found!");
 		 }		
+	}
+	
+	@PostMapping("/addAddress/{userId}")
+	public ResponseEntity<String> addAddressForUser(@PathVariable("userId") Integer userId,@RequestBody UserAddress address){
+		Users user = usersRepo.findById(userId).orElseThrow(()->new UsernameNotFoundException("Invalid user id"));
+		address.setUser(user);
+		usersAddressRepo.save(address);
+		return new ResponseEntity<>("address added!!",HttpStatus.CREATED);
+		
 	}
 	
 	private void performUserDataValidation(Users user, BindingResult result) throws InvalidInputException {

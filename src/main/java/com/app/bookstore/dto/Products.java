@@ -1,14 +1,18 @@
 package com.app.bookstore.dto;
-
 import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 @Entity
+
 public class Products implements Serializable {
 
 	private static final long serialVersionUID = -7440090907392499673L;
@@ -16,15 +20,18 @@ public class Products implements Serializable {
 	@Id
 	private Integer productId;
 	
+	@NotNull
 	private String name;
 	
+	@NotNull
 	private String description;
 	
+	@Positive
 	private float price;
     
 	private boolean status;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "supplier_id")
 	private Users supplierId;
 	
@@ -32,24 +39,27 @@ public class Products implements Serializable {
 	@JoinColumn(name = "category_id")
 	private Category category;
 	
+	@Positive
 	private Integer unitsInStock;
 	
-	private Integer unitsOnOrder;
 	
-	@OneToMany
-	private Set<OrderLines> orderLine;
+	private Integer unitsOnSold;
+	
+	
 	
 	@OneToMany
 	private Set<Reviews> review;
+	
+	@OneToMany
+	private Set<Cart> cart;
 
 	public Products() {
 		super();
 	}
 	
-	
-	public Products(Integer productId, String name, String description, float price, boolean status, Users supplierId,
-			Category category, Integer unitsInStock, Integer unitsOnOrder, Set<OrderLines> orderLine,
-			Set<Reviews> review) {
+	public Products(Integer productId, @NotNull String name, @NotNull String description, @Positive float price,
+			boolean status, Users supplierId, Category category, @Positive Integer unitsInStock, Integer unitsOnSold,
+			 Set<Reviews> review, Set<Cart> cart) {
 		super();
 		this.productId = productId;
 		this.name = name;
@@ -59,11 +69,10 @@ public class Products implements Serializable {
 		this.supplierId = supplierId;
 		this.category = category;
 		this.unitsInStock = unitsInStock;
-		this.unitsOnOrder = unitsOnOrder;
-		this.orderLine = orderLine;
-		this.review = review;
+		this.unitsOnSold = unitsOnSold;
+			this.review = review;
+		this.cart = cart;
 	}
-
 
 	public Integer getProductId() {
 		return productId;
@@ -105,6 +114,7 @@ public class Products implements Serializable {
 		this.status = status;
 	}
 
+	
 	public Users getSupplierId() {
 		return supplierId;
 	}
@@ -129,22 +139,12 @@ public class Products implements Serializable {
 		this.unitsInStock = unitsInStock;
 	}
 
-	public Integer getUnitsOnOrder() {
-		return unitsOnOrder;
+	public Integer getUnitsOnSold() {
+		return unitsOnSold;
 	}
 
-	public void setUnitsOnOrder(Integer unitsOnOrder) {
-		this.unitsOnOrder = unitsOnOrder;
-	}
-	
-	
-	public Set<OrderLines> getOrderLine() {
-		return orderLine;
-	}
-
-
-	public void setOrderLine(OrderLines orderLine) {
-		this.orderLine.add(orderLine);
+	public void setUnitsOnSold(Integer unitsOnOrder) {
+		this.unitsOnSold = unitsOnOrder;
 	}
 
 
@@ -152,21 +152,24 @@ public class Products implements Serializable {
 		return review;
 	}
 
-
 	public void setReview(Reviews review) {
 		this.review.add(review);
 	}
+	
+	public Set<Cart> getCart() {
+		return cart;
+	}
 
+	public void setCart(Cart cart) {
+		this.cart.add(cart);
+	}
 
 	@Override
 	public String toString() {
 		return "Products [productId=" + productId + ", name=" + name + ", description=" + description + ", price="
 				+ price + ", status=" + status + ", supplierId=" + supplierId + ", category=" + category
-				+ ", unitsInStock=" + unitsInStock + ", unitsOnOrder=" + unitsOnOrder + ", orderLine=" + orderLine
-				+ ", review=" + review + "]";
+				+ ", unitsInStock=" + unitsInStock + ", unitsOnSold=" + unitsOnSold + ", review=" + review + ", cart="
+				+ cart + "]";
 	}
-
-
-		
-
+	
 }

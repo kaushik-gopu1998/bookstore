@@ -17,26 +17,16 @@ public class Category implements Serializable {
 	
 	private String name;
 	
-	@OneToMany
-	private Set<Products> product;
-
+	
 	public Category() {
 		super();
 	}
     
-	public Category(Integer categoryId, String name, Set<Products> product) {
+	public Category(String name) {
 		super();
-		this.categoryId = categoryId;
+		
 		this.name = name;
-		this.product = product;
-	}
-
-	public Integer getCategoryId() {
-		return categoryId;
-	}
-
-	public void setCategoryId(Integer categoryId) {
-		this.categoryId = categoryId;
+		
 	}
 
 	public String getName() {
@@ -48,17 +38,9 @@ public class Category implements Serializable {
 	}
 	
 	
-	public Set<Products> getProduct() {
-		return product;
-	}
-
-	public void setProduct(Products product) {
-		this.product.add(product);
-	}
-
 	@Override
 	public String toString() {
-		return "Category [categoryId=" + categoryId + ", name=" + name + ", product=" + product + "]";
+		return "Category [ name=" + name + "]";
 	}
 
 }

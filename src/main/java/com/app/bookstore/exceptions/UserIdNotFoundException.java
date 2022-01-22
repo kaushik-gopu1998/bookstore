@@ -8,6 +8,9 @@ public class UserIdNotFoundException extends Exception{
 
 	private static final long serialVersionUID = 6806707843014938563L;
 	
+	public UserIdNotFoundException() {
+		
+	}
 	public UserIdNotFoundException(String errorMessage)
 	{
 		super(errorMessage);

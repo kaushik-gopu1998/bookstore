@@ -5,8 +5,6 @@ import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 @Entity
 public class City implements Serializable {
@@ -18,23 +16,23 @@ public class City implements Serializable {
 	
 	private String name;
 	
-	@ManyToOne
-	@JoinColumn(name = "state_id")
-	private State State;
-
-	@OneToMany
-	private Set<Users> user;
+	@OneToMany(mappedBy="city")
+	private Set<UserAddress> userAddress;
+	
+	
+	
+	
 	
 	public City() {
 		super();
 	}
 
-	public City(Integer cityId, String name, State state, Set<Users> user) {
+	public City(Integer cityId, String name) {
 		super();
 		this.cityId = cityId;
 		this.name = name;
-		State = state;
-		this.user = user;
+		
+		
 	}
 
 	public Integer getCityId() {
@@ -53,20 +51,7 @@ public class City implements Serializable {
 		this.name = name;
 	}
 
-	public State getState() {
-		return State;
-	}
+	
 
-	public void setState(State state) {
-		State = state;
-	}
-
-	public Set<Users> getUser() {
-		return user;
-	}
-
-	public void setUser(Users user) {
-		this.user.add(user);
-	}
-		
+	
 }

@@ -5,6 +5,8 @@ import java.sql.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -16,17 +18,16 @@ public class Orders implements Serializable {
 	private static final long serialVersionUID = -7006005479515401167L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer orderId;
 	
 	private Date orderDate;
 	
 	private Date orderSentDate;
 	
-	private String address;
-	
-	private String street;
-	
-	private Integer pinCode;
+	@OneToOne
+	@JoinColumn(name="address_id")
+	private UserAddress addressId;
 	
 	private Float totalAmount;
 	
@@ -48,21 +49,19 @@ public class Orders implements Serializable {
 	public Orders() {
 		super();
 	}
-
-	public Orders(Integer orderId, Date orderDate, Date orderSentDate, String address, String street, Integer pinCode,
-			Float totalAmount, OrderStatus statusId, Users userId, Shippers shipperId, Set<OrderLines> orderLines) {
+   
+	public Orders(Integer orderId, Date orderDate, Date orderSentDate, UserAddress userAdddress, OrderStatus statusId,
+			Users userId, Shippers shipperId, Set<OrderLines> orderLines,Float totalAmount) {
 		super();
 		this.orderId = orderId;
 		this.orderDate = orderDate;
 		this.orderSentDate = orderSentDate;
-		this.address = address;
-		this.street = street;
-		this.pinCode = pinCode;
-		this.totalAmount = totalAmount;
+		this.addressId = userAdddress;
 		this.statusId = statusId;
 		this.userId = userId;
 		this.shipperId = shipperId;
 		this.orderLines = orderLines;
+		this.totalAmount=totalAmount;
 	}
 
 	public Integer getOrderId() {
@@ -89,38 +88,7 @@ public class Orders implements Serializable {
 		this.orderSentDate = orderSentDate;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getStreet() {
-		return street;
-	}
-
-	public void setStreet(String street) {
-		this.street = street;
-	}
-
-	public Integer getPinCode() {
-		return pinCode;
-	}
-
-	public void setPinCode(Integer pinCode) {
-		this.pinCode = pinCode;
-	}
-
-	public Float getTotalAmount() {
-		return totalAmount;
-	}
-
-	public void setTotalAmount(Float totalAmount) {
-		this.totalAmount = totalAmount;
-	}
-
+	
 	public OrderStatus getStatusId() {
 		return statusId;
 	}
@@ -153,11 +121,28 @@ public class Orders implements Serializable {
 		this.orderLines.add(orderLines);
 	}
 
+	public UserAddress getUserAdddress() {
+		return addressId;
+	}
+
+	public void setUserAdddress(UserAddress userAdddress) {
+		this.addressId = userAdddress;
+	}
+	
+
+	public Float getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(Float totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
 	@Override
 	public String toString() {
 		return "Orders [orderId=" + orderId + ", orderDate=" + orderDate + ", orderSentDate=" + orderSentDate
-				+ ", address=" + address + ", street=" + street + ", pinCode=" + pinCode + ", totalAmount="
-				+ totalAmount + ", statusId=" + statusId + ", userId=" + userId + ", shipperId=" + shipperId
-				+ ", orderLines=" + orderLines + "]";
+				+ ", userAdddress=" + addressId + ", totalAmount=" + totalAmount + ", statusId=" + statusId
+				+ ", userId=" + userId + ", shipperId=" + shipperId + ", orderLines=" + orderLines + "]";
 	}
-}
+
+	}

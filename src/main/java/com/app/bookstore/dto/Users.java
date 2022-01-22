@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Users implements Serializable {
@@ -27,21 +28,19 @@ public class Users implements Serializable {
 	private String password;
 	
 	private String phoneNumber;
+    
+	@OneToMany(mappedBy="user")
+	private Set<UserAddress> userAddress;
 	
-	int zip;
-	
-	@ManyToOne
-	@JoinColumn(name="city_id")
-	private City city;
-	
-	@OneToMany
+	@OneToMany(mappedBy="supplierId")
 	private Set<Products> product;
 	
-	@OneToMany
+	@OneToMany(mappedBy="userId")
 	private Set<Orders> order;
 	
 	@OneToMany
 	private Set<Reviews> review;
+	
 	
 	public Users() {
 		super();
@@ -49,21 +48,30 @@ public class Users implements Serializable {
 
 	
 
-	public Users(Integer userId, String firstName, String lastName, String phoneNumber, String email, String password, int zip, City city,
-			Set<Products> product, Set<Orders> order, Set<Reviews> review) {
+
+
+
+
+
+	public Users(Integer userId, String firstName, String lastName, String email, String password, String phoneNumber,
+			Set<Products> product, Set<Orders> order, Set<Reviews> review, Set<UserAddress> userAddress) {
 		super();
 		this.userId = userId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.password = password;
-		this.zip = zip;
-		this.city = city;
+		this.phoneNumber = phoneNumber;
 		this.product = product;
 		this.order = order;
 		this.review = review;
-		this.phoneNumber=phoneNumber;
+		this.userAddress = userAddress;
 	}
+
+
+
+
+
 
 
 
@@ -125,32 +133,7 @@ public class Users implements Serializable {
 		this.password = password;
 	}
 
-
-
-	public int getZip() {
-		return zip;
-	}
-
-
-
-	public void setZip(int zip) {
-		this.zip = zip;
-	}
-
-
-
-	public City getCity() {
-		return city;
-	}
-
-
-
-	public void setCity(City city) {
-		this.city = city;
-	}
-
-
-
+   
 	public Set<Products> getProduct() {
 		return product;
 	}
@@ -162,60 +145,54 @@ public class Users implements Serializable {
 	}
 
 
-
+	
 	public Set<Orders> getOrder() {
 		return order;
 	}
-
-
 
 	public void setOrder(Orders order) {
 		this.order.add(order);
 	}
 
-
-
 	public Set<Reviews> getReview() {
 		return review;
 	}
 
-
-
 	public void setReview(Reviews review) {
 		this.review.add(review);
 	}
-	
-	
-
-
 
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 
-
-
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+
+	public Set<UserAddress> getUserAddress() {
+		return userAddress;
+	}
+
+	public void setUserAddress(UserAddress userAddress) {
+		this.userAddress.add(userAddress);
+	}
+
+
+
 
 
 
 	@Override
 	public String toString() {
 		return "Users [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-				+ ", password=" + password + ", phoneNumber=" + phoneNumber + ", zip=" + zip + ", city=" + city
-				+ ", product=" + product + ", order=" + order + ", review=" + review + "]";
+				+ ", password=" + password + ", phoneNumber=" + phoneNumber + ", product=" + product + ", order="
+				+ order + ", review=" + review + ", userAddress=" + userAddress + "]";
 	}
-
-
-
-	
-	
 	
 	
 
+   
 
 
-	
 }

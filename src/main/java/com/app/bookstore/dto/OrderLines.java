@@ -1,30 +1,33 @@
 package com.app.bookstore.dto;
 
 import java.io.Serializable;
-import java.sql.Date;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
+
 @Entity
 public class OrderLines  implements Serializable{
 
 	private static final long serialVersionUID = 7949787868201340973L;
-
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer lineId;
 	
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name ="product_id")
-	private Products prodcut;
+	@NotNull
+	private Products prodcutId;
 	
 	@ManyToOne
 	@JoinColumn(name = "order_id")
 	private Orders order;
-	
+		
 	private Float price;
-	
-	private Date orderDate;
 	
 	private Integer quantity;
 
@@ -32,13 +35,12 @@ public class OrderLines  implements Serializable{
 		super();
 	}
 
-	public OrderLines(Integer lineId, Products prodcut, Orders order, Float price, Date orderDate, Integer quantity) {
+	public OrderLines(Integer lineId, Products prodcutId, Orders order, Float price, Integer quantity) {
 		super();
 		this.lineId = lineId;
-		this.prodcut = prodcut;
+		this.prodcutId = prodcutId;
 		this.order = order;
 		this.price = price;
-		this.orderDate = orderDate;
 		this.quantity = quantity;
 	}
 
@@ -49,13 +51,13 @@ public class OrderLines  implements Serializable{
 	public void setLineId(Integer lineId) {
 		this.lineId = lineId;
 	}
-
-	public Products getProdcut() {
-		return prodcut;
+	
+	public Products getProdcutId() {
+		return prodcutId;
 	}
 
-	public void setProdcut(Products prodcut) {
-		this.prodcut = prodcut;
+	public void setProdcutId(Products prodcutId) {
+		this.prodcutId = prodcutId;
 	}
 
 	public Orders getOrder() {
@@ -74,14 +76,6 @@ public class OrderLines  implements Serializable{
 		this.price = price;
 	}
 
-	public Date getOrderDate() {
-		return orderDate;
-	}
-
-	public void setOrderDate(Date orderDate) {
-		this.orderDate = orderDate;
-	}
-
 	public Integer getQuantity() {
 		return quantity;
 	}
@@ -92,8 +86,8 @@ public class OrderLines  implements Serializable{
 
 	@Override
 	public String toString() {
-		return "OrderLines [lineId=" + lineId + ", prodcut=" + prodcut + ", order=" + order + ", price=" + price
-				+ ", orderDate=" + orderDate + ", quantity=" + quantity + "]";
+		return "OrderLines [lineId=" + lineId + ", prodcutId=" + prodcutId + ", order=" + order + ", price=" + price
+				 + ", quantity=" + quantity + "]";
 	}
 		
 }
