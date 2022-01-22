@@ -57,6 +57,6 @@ public class CartService {
 	}
 	
 	public void deleteUserCartItems(Users user) {
-		cartRepo.deleteByUsers(user);
+		cartRepo.deleteByUserId(user);
 	}
 }

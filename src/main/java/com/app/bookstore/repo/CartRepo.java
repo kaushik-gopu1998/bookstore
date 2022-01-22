@@ -10,5 +10,5 @@ import com.app.bookstore.dto.Users;
 public interface CartRepo extends JpaRepository<Cart,Integer> {
 	List<Cart> findByUserId(Users user);
 	
-	List<Cart> deleteByUsers(Users user);
+	List<Cart> deleteByUserId(Users user);
 }
