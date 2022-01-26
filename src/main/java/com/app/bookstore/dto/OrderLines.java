@@ -10,6 +10,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 @Entity
 public class OrderLines  implements Serializable{
 
@@ -23,7 +26,8 @@ public class OrderLines  implements Serializable{
 	@NotNull
 	private Products prodcutId;
 	
-	@ManyToOne
+	@ManyToOne()
+    @Cascade(CascadeType.SAVE_UPDATE)
 	@JoinColumn(name = "order_id")
 	private Orders order;
 		

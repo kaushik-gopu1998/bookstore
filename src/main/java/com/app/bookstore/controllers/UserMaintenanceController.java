@@ -1,7 +1,4 @@
 package com.app.bookstore.controllers;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,7 +20,7 @@ import com.app.bookstore.exceptions.InvalidInputException;
 import com.app.bookstore.exceptions.UserIdNotFoundException;
 import com.app.bookstore.repo.UsersAddressRepo;
 import com.app.bookstore.repo.UsersRepo;
-import com.app.bookstore.validators.UserDetailsValidator;
+import com.app.bookstore.service.UsersService;
 @RestController
 public class UserMaintenanceController {
 
@@ -33,12 +28,12 @@ public class UserMaintenanceController {
 	@Autowired
 	UsersRepo usersRepo;
 	@Autowired
-	UserDetailsValidator userDetailsValidator;
-	@Autowired
 	UsersAddressRepo usersAddressRepo;
+	@Autowired
+	UsersService usersService;
 	@PostMapping("/createUser")		
 	public ResponseEntity<String> createUser(@RequestBody  Users user, BindingResult result) throws EmailIdExistsException, InvalidInputException{	
-		performUserDataValidation(user, result);		
+		usersService.performUserDataValidation(user, result);		
 		if(usersRepo.findByEmail(user.getEmail())!=null) {
 			logger.error("EmailId already exists!->{}",user.getEmail());
 			throw new EmailIdExistsException("Invalid Entry");
@@ -52,10 +47,8 @@ public class UserMaintenanceController {
 	
 	@PutMapping("/updateUser/{id}")
 	public ResponseEntity<String> updateUser(@PathVariable("id") Integer id, @RequestBody Users newData, BindingResult result) throws UserIdNotFoundException, InvalidInputException{
-		performUserDataValidation(newData, result);
-		 if(usersRepo.findById(id).isPresent())
-		 {
-		 Users oldData =  usersRepo.findById(id).get();
+		 usersService.performUserDataValidation(newData, result);
+		 Users oldData =  usersRepo.findById(id).orElseThrow(()->new UsernameNotFoundException("Invalid user id"));
 		 oldData.setFirstName(newData.getFirstName());
 		 oldData.setLastName(newData.getLastName());
 		 oldData.setEmail(newData.getEmail());
@@ -64,12 +57,8 @@ public class UserMaintenanceController {
 		 usersRepo.save(oldData);
 		 logger.info("update successfull!");
 		 return new ResponseEntity<>("successfully updated!!",HttpStatus.OK);
-		 }
-		 else 
-		 {		
-		 logger.debug("User Id {} not found in database",id);
-		 throw new UserIdNotFoundException("user id not found!");
-		 }		
+		 
+		 
 	}
 	
 	@PostMapping("/addAddress/{userId}")
@@ -77,21 +66,8 @@ public class UserMaintenanceController {
 		Users user = usersRepo.findById(userId).orElseThrow(()->new UsernameNotFoundException("Invalid user id"));
 		address.setUser(user);
 		usersAddressRepo.save(address);
-		return new ResponseEntity<>("address added!!",HttpStatus.CREATED);
-		
+		return new ResponseEntity<>("address added!!",HttpStatus.CREATED);	
 	}
 	
-	private void performUserDataValidation(Users user, BindingResult result) throws InvalidInputException {
-		logger.info("Validation Process Started...");
-		userDetailsValidator.validate(user, result);
-		if(result.hasErrors())
-		{
-			logger.error("invalid entry by user");
-			List<String> errors = new ArrayList<>();
-		    for(ObjectError error : result.getAllErrors()) {
-		    	errors.add(((FieldError) error).getField());
-		    }
-			throw new InvalidInputException(errors);
-		}						
-	}	
+	
 }

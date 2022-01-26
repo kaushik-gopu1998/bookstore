@@ -11,6 +11,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 @Entity
 
 public class Products implements Serializable {
@@ -21,9 +22,11 @@ public class Products implements Serializable {
 	private Integer productId;
 	
 	@NotNull
+	@Size(min = 3, max = 20)
 	private String name;
 	
 	@NotNull
+	@Size(min = 20)
 	private String description;
 	
 	@Positive

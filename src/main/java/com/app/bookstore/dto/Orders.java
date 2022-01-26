@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -43,7 +44,7 @@ public class Orders implements Serializable {
 	@JoinColumn(name = "shipper_id")
 	private Shippers shipperId;
 	
-	@OneToMany
+	@OneToMany(mappedBy="order",cascade = CascadeType.ALL)
 	private Set<OrderLines> orderLines;
 
 	public Orders() {
@@ -117,8 +118,9 @@ public class Orders implements Serializable {
 		return orderLines;
 	}
 
-	public void setOrderLines(OrderLines orderLines) {
-		this.orderLines.add(orderLines);
+    
+	public void setOrderLines(Set<OrderLines> orderLines) {
+		this.orderLines = orderLines;
 	}
 
 	public UserAddress getUserAdddress() {

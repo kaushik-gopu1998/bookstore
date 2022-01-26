@@ -1,15 +1,25 @@
 package com.app.bookstore.VO;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
+
 import com.app.bookstore.dto.Category;
 
 public class ProductsVO {
 
 	private Integer productId;
+	@NotNull
+	@Size(min = 3, max = 20)
 	private String name;
+	@NotNull
+	@Size(min = 20)
 	private String description;
+	@Positive
 	private Float price;
 	private boolean status;
 	private Category category;
+	@Positive
 	private Integer unitsInStock;
 	private Integer unitsOnSold;
 	public ProductsVO() {

@@ -2,11 +2,13 @@ package com.app.bookstore.service;
 
 import java.sql.Date;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.app.bookstore.VO.CartItemVO;
 import com.app.bookstore.VO.CartVO;
@@ -32,32 +34,33 @@ CartService cartService;
 UsersRepo usersRepo;
 @Autowired
 OrdersRepo ordersRepo;
-
+@Autowired
+ProductsService productsService;
 @Autowired
 ProductRepo productsRepo;
 @Autowired
 OrderLinesRepo orderLinesRepo;
+    @Transactional(rollbackFor = Exception.class)
 	public void placeOrder(OrderInfoVO orderInfo) throws InvalidAddressIdException, UserIdNotFoundException, ProductNotFoundException {
         CartVO cartVO = cartService.listCartItems(usersRepo.findById(orderInfo.getUserId()).orElseThrow(()->new UserIdNotFoundException("Invalid User Id!")));
         List<CartItemVO> cartItemsVo = cartVO.getCartItems();
 		Orders order = new Orders();
-		
 		order.setOrderDate(new Date(System.currentTimeMillis()));
 		order.setUserAdddress(usersAddressRepo.findById(orderInfo.getAddressId()).orElseThrow(()-> new InvalidAddressIdException("Invalid Input")));
 		order.setUserId(usersRepo.findById(orderInfo.getUserId()).get());
 		order.setTotalAmount(cartVO.getTotalCost());
-		ordersRepo.save(order);
-		
+		Set<OrderLines> orderLines = new HashSet<OrderLines>();
 		for(CartItemVO cartItemVO : cartItemsVo) {
 			OrderLines orderLine = new OrderLines();
 			orderLine.setPrice(cartItemVO.getProduct().getPrice());
 			orderLine.setProdcutId(productsRepo.findById(cartItemVO.getProduct().getProductId()).orElseThrow(()->new ProductNotFoundException("Invalid Product Information")));
 			orderLine.setQuantity(cartItemVO.getQuantity());
 			orderLine.setOrder(order);
-			orderLinesRepo.save(orderLine);	
+			orderLines.add(orderLine);
 		}
-		
-		//delete cart items		
+		order.setOrderLines(orderLines);
+		ordersRepo.save(order);
+        productsService.updateProductsQuantity(orderLines);
 		cartService.deleteUserCartItems(usersRepo.findById(orderInfo.getUserId()).get());
 	}
 

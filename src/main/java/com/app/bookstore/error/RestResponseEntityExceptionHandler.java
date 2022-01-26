@@ -21,6 +21,7 @@ import com.app.bookstore.exceptions.EmailIdExistsException;
 import com.app.bookstore.exceptions.InvalidAddressIdException;
 import com.app.bookstore.exceptions.InvalidInputException;
 import com.app.bookstore.exceptions.ProductNotFoundException;
+import com.app.bookstore.exceptions.QuantityOverFlowException;
 import com.app.bookstore.exceptions.ResponseEntityBuilder;
 import com.app.bookstore.exceptions.UserIdNotFoundException;
 
@@ -111,7 +112,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 		ApiError apiError = new ApiError(
 				 LocalDateTime.now(),
 				 HttpStatus.BAD_REQUEST,
-				 "Inavlid Input!",
+				 ex.getMessage(),
 			      details
 				);
 		return ResponseEntityBuilder.build(apiError);
@@ -132,6 +133,19 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 		return ResponseEntityBuilder.build(apiError);
 	}
 	
+	@ExceptionHandler({QuantityOverFlowException.class})
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<Object> handleInvalidInputException(QuantityOverFlowException ex, final WebRequest request){
+		List<Object> details =  new ArrayList<Object>();
+		details.add(ex.getMessage());
+		ApiError apiError = new ApiError(
+				 LocalDateTime.now(),
+				 HttpStatus.BAD_REQUEST,
+				 "Inavlid Input!",
+			      details
+				);
+		return ResponseEntityBuilder.build(apiError);
+	}
 
 	/*
 	 * why not @ExceptionHandler?
@@ -150,5 +164,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 				);
 		return ResponseEntityBuilder.build(apiError);
 	}
+	
+	
 	
 }

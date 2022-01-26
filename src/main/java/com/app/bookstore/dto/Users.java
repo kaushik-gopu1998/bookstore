@@ -3,6 +3,7 @@ package com.app.bookstore.dto;
 import java.io.Serializable;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -29,7 +30,7 @@ public class Users implements Serializable {
 	
 	private String phoneNumber;
     
-	@OneToMany(mappedBy="user")
+	@OneToMany(mappedBy="user",cascade = CascadeType.ALL)
 	private Set<UserAddress> userAddress;
 	
 	@OneToMany(mappedBy="supplierId")
